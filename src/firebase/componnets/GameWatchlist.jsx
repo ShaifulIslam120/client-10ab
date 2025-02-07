@@ -12,7 +12,7 @@ const GameWatchlist = () => {
       if (!currentUser) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/myWatchlist/${currentUser.email}`);
+        const response = await fetch(`https://assignment10-serversite.vercel.app/myWatchlist/${currentUser.email}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch watchlist');

@@ -55,7 +55,7 @@ const AddReview = () => {
 
     try {
       // Send POST request to the backend using fetch
-      const response = await fetch('http://localhost:3000/add-review', {
+      const response = await fetch('https://assignment10-serversite.vercel.app/add-review', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

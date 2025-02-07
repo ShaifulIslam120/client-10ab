@@ -21,7 +21,7 @@ const UpdateReview = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/review/${id}`);
+        const response = await fetch(`https://assignment10-serversite.vercel.app/review/${id}`);
         const data = await response.json();
         setReview(data);
       } catch (error) {
@@ -44,7 +44,7 @@ const UpdateReview = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/reviews/${id}`, {
+      const response = await fetch(`https://assignment10-serversite.vercel.app/reviews/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

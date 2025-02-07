@@ -15,7 +15,7 @@ const ReviewDetails = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/review/${id}`);
+        const response = await fetch(`https://assignment10-serversite.vercel.app/review/${id}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -45,7 +45,7 @@ const ReviewDetails = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/add-to-watchlist', {
+      const response = await fetch('https://assignment10-serversite.vercel.app/add-to-watchlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

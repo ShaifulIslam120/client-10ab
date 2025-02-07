@@ -12,7 +12,7 @@ const MyReviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('http://localhost:3000/reviews'); // Fetch reviews for the logged-in user
+        const response = await fetch('https://assignment10-serversite.vercel.app/reviews'); // Fetch reviews for the logged-in user
         const data = await response.json();
         
         // Filter the reviews to only show the ones added by the current user
@@ -45,7 +45,7 @@ const MyReviews = () => {
       if (result.isConfirmed) {
         try {
           // Send DELETE request to the backend to delete the review
-          const response = await fetch(`http://localhost:3000/reviews/${id}`, {
+          const response = await fetch(`https://assignment10-serversite.vercel.app//reviews/${id}`, {
             method: 'DELETE',
           });
 
