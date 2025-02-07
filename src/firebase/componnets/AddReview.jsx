@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { getAuth } from 'firebase/auth';  // Import Firebase Auth
 
 const AddReview = () => {
   const [gameCover, setGameCover] = useState('');
@@ -7,13 +8,30 @@ const AddReview = () => {
   const [reviewDescription, setReviewDescription] = useState('');
   const [rating, setRating] = useState(1);
   const [publishYear, setPublishYear] = useState('');
+  const [genres, setGenres] = useState([]);
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  // Fetch the current user data (name, email) when component mounts
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      setUserEmail(user.email);  // Set user email from Firebase Auth
+      setUserName(user.displayName || 'Anonymous');  // Use user display name, fallback to 'Anonymous'
+    } else {
+      setUserEmail('');  // Handle user not logged in
+      setUserName('');  // Handle user not logged in
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
-    if (!gameCover || !gameTitle || !reviewDescription || !publishYear) {
+    if (!gameCover || !gameTitle || !reviewDescription || !publishYear || !genres || !userEmail || !userName) {
       setError('All fields are required.');
       return;
     }
@@ -23,22 +41,67 @@ const AddReview = () => {
       return;
     }
 
-    // Process the form data (you can save this to Firebase, for example)
-    // Here, we'll just show a success message
-    Swal.fire({
-      title: 'Review Submitted!',
-      text: 'Your review has been submitted successfully.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-    });
+    // Prepare the review data
+    const reviewData = {
+      gameCover,
+      gameTitle,
+      reviewDescription,
+      rating,
+      publishYear,
+      genres,
+      userEmail,
+      userName
+    };
 
-    // Reset form fields
-    setGameCover('');
-    setGameTitle('');
-    setReviewDescription('');
-    setRating(1);
-    setPublishYear('');
-    setError('');
+    try {
+      // Send POST request to the backend using fetch
+      const response = await fetch('http://localhost:3000/add-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      // Check if the response is successful
+      if (response.ok) {
+        const data = await response.json();
+
+        // Show success message if review is added successfully
+        Swal.fire({
+          title: 'Review Submitted!',
+          text: data.message,
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        // Reset form fields
+        setGameCover('');
+        setGameTitle('');
+        setReviewDescription('');
+        setRating(1);
+        setPublishYear('');
+        setGenres([]);
+        setError('');
+      } else {
+        // Handle error if response is not ok
+        const errorData = await response.json();
+        Swal.fire({
+          title: 'Error',
+          text: errorData.message || 'There was an error submitting your review.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding review:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'There was an error submitting your review.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
   };
 
   return (
@@ -100,6 +163,26 @@ const AddReview = () => {
             placeholder="Publishing Year (e.g. 2021)"
             value={publishYear}
             onChange={(e) => setPublishYear(e.target.value)}
+            className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md placeholder-gray-400 focus:outline-none"
+          />
+        </div>
+
+        {/* User Email (Read-Only) */}
+        <div className="mb-4">
+          <input
+            type="email"
+            value={userEmail}
+            readOnly
+            className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md placeholder-gray-400 focus:outline-none"
+          />
+        </div>
+
+        {/* User Name (Read-Only) */}
+        <div className="mb-4">
+          <input
+            type="text"
+            value={userName}
+            readOnly
             className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md placeholder-gray-400 focus:outline-none"
           />
         </div>

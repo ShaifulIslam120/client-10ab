@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Optional: Apply a default background color for light mode */
+  body {
+    background-color: #ffffff; /* Light mode background */
+    color: #000000; /* Light mode text color */
+  }
+
+  /* Optional: Define styles for dark mode */
+  .dark body {
+    background-color: #1a1a1a; /* Dark mode background */
+    color: #ffffff; /* Dark mode text color */
+  }
+}
